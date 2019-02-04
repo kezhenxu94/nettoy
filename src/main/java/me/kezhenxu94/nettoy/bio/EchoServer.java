@@ -22,7 +22,7 @@ public class EchoServer {
   private static final Logger LOGGER = Logger.getLogger(EchoServer.class.getSimpleName());
   private static final String POISON_PILL = "BYE";
 
-  private Executor executor = Executors.newCachedThreadPool();
+  private final Executor executor = Executors.newCachedThreadPool();
 
   public void start() throws IOException {
     final ServerSocket serverSocket = new ServerSocket();
@@ -37,7 +37,7 @@ public class EchoServer {
     new EchoServer().start();
   }
 
-  private class SocketHandler implements Runnable {
+  private static class SocketHandler implements Runnable {
     private final Socket socket;
 
     SocketHandler(Socket socket) {

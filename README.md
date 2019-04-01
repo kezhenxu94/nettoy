@@ -2,11 +2,13 @@
 
 A toy [Netty Project](https://github.com/netty/netty) for study case
 
+![Feynman](src/main/resources/feynman.png)
+
 ## Posts Contents
 
 - [Build Your Own Netty - Foreword](src/main/resources/Build%20Your%20Own%20Netty%20-%20Foreword.md)
 
-- Build Your Own Netty - Starting from BIO
+- [Build Your Own Netty - Start from BIO](src/main/resources/Build%20Your%20Own%20Netty%20-%20Start%20from%20BIO.md)
 
 - Build Your Own Netty - Move to NIO
 

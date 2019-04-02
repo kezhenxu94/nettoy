@@ -4,7 +4,7 @@ A toy [Netty Project](https://github.com/netty/netty) for study case
 
 ![Feynman](src/main/resources/feynman.png)
 
-## Posts Contents
+## Table of Content
 
 - [Build Your Own Netty - Foreword](src/main/resources/Build%20Your%20Own%20Netty%20-%20Foreword.md)
 

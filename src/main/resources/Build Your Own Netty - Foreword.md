@@ -25,7 +25,7 @@ which makes me more curious about how Netty do that, and want to dive into the s
 Also, there are already [many excellent articles on Netty source code analysis](https://netty.io/wiki/related-articles.html),
 but this series of articles will provide another point of view to inspect how Netty is structured, how Netty works, and how it is so performant.
 
-## How this Series of Articles Organized
+## How this Series of Articles are Organized
 
 **This series of articles respect a bottom-top approach to analyze the source code of Netty.**
 
@@ -42,3 +42,5 @@ Now that we have completed an Echo server by applying the core concepts that Net
 We'll take a detailed look at the core components of Netty, say `EventLoop`, `Channel`, `Handler`, `Pipeline` etc. and how they work together.
 
 After that we will dive deeper into the source code of Netty to find out why it is blazingly fast and how it works, (hopefully) including every aspect of optimization in Netty.
+
+So, let's get started and hope you enjoy it.

@@ -1,4 +1,4 @@
-package me.kezhenxu94.nettoy.nio;
+package me.kezhenxu94.nottoy.nio;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -11,9 +11,9 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
- * Created by kezhenxu in 2018/8/28 21:53
+ * Created by kezhenxu94 in 2018/8/28 21:53
  *
- * @author kezhenxu (kezhenxu94 at 163 dot com)
+ * @author kezhenxu94 (kezhenxu94 at 163 dot com)
  */
 public class EchoServer {
   private static final Logger LOGGER = Logger.getLogger(EchoServer.class.getName());

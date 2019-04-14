@@ -1,4 +1,4 @@
-package me.kezhenxu94.nettoy.nio;
+package me.kezhenxu94.nottoy.nio;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 /**
- * Created by kezhenxu in 2018/8/28 21:58
+ * Created by kezhenxu94 in 2018/8/28 21:58
  *
- * @author kezhenxu (kezhenxu94 at 163 dot com)
+ * @author kezhenxu94 (kezhenxu94 at 163 dot com)
  */
 public class EchoClient {
   private static final Logger LOGGER = Logger.getLogger(EchoClient.class.getName());

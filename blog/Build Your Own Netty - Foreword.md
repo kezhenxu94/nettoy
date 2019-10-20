@@ -16,14 +16,14 @@ maintainable high performance protocol servers & clients.
 
 I've been interested in Netty for a long time, and I have read many blog posts that address Netty's
 performance, architecture, and [package structures](https://dzone.com/articles/probably-the-best-package-structure-in-the-world),
-which makes me more curious about how Netty do that, and want to dive into the source code of Netty. 
+which makes me more curious about how Netty did that, and want to dive into the source code of Netty. 
  
 ![netty-evolution](netty-evolution.gif)
 
 > Image above is taken from the post [Netty: Probably the Best Package Structure in the World](https://dzone.com/articles/probably-the-best-package-structure-in-the-world).
 
 Also, there are already [many excellent articles on Netty source code analysis](https://netty.io/wiki/related-articles.html),
-but this series of articles will provide another point of view to inspect how Netty is structured, how Netty works, and how it is so performant.
+but this series of articles will provide another point of view to inspect how Netty is structured, how Netty works, and why it is so performant.
 
 ## How this Series of Articles are Organized
 

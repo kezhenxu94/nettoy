@@ -1,6 +1,6 @@
 # Build Your Own Netty - Start from BIO
 
-In this article, we will implement an Echo Server by the Java Blocking I/O library.
+In this article, we will implement an Echo Server using the Java Blocking I/O library.
 
 ## Echo Server with BIO
 
@@ -72,8 +72,8 @@ public class EchoServer {
 
 0. To listen on a specified port for incoming connection, we will firstly need to create a
 `java.net.ServerSocket`, and bind it to the specified port. Note that this step only tells the
-operating system which network card and port our following operations will target to.
-Because there may be more than one network cards existed on your machine.
+operation system which network address and port our following operations will target to.
+Because there may be more than one network addresses available on your machine.
 
 0. Then we call `java.net.ServerSocket.accept` to wait for and accept the incoming connection.
 As stated before, this operation will block until there are connections coming in. And once there

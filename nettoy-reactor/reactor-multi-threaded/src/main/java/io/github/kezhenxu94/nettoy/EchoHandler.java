@@ -1,6 +1,8 @@
 package io.github.kezhenxu94.nettoy;
 
 import io.github.kezhenxu94.nettoy.reactor.ChannelHandler;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,13 +12,12 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Logger;
 
 /**
  * @author kezhenxu94
  */
+@Log
 public final class EchoHandler implements ChannelHandler {
-  static final Logger LOGGER = Logger.getLogger(EchoHandler.class.getName());
   static final String POISON_PILL = "BYE";
 
   final Executor executor;
@@ -69,12 +70,9 @@ public final class EchoHandler implements ChannelHandler {
     }
   }
 
+  @RequiredArgsConstructor
   class Processor implements Runnable {
     private final String message;
-
-    Processor(final String message) {
-      this.message = message;
-    }
 
     @Override
     public void run() {

@@ -1,6 +1,7 @@
 package io.github.kezhenxu94.nettoy.reactor;
 
 import io.github.kezhenxu94.nettoy.EchoHandler;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -66,14 +67,10 @@ public final class Reactor implements Runnable {
     }
   }
 
+  @RequiredArgsConstructor
   static class ServerAcceptor implements ChannelHandler {
     final ServerSocketChannel serverSocketChannel;
     final Selector selector;
-
-    public ServerAcceptor(final ServerSocketChannel serverSocketChannel, final Selector selector) {
-      this.serverSocketChannel = serverSocketChannel;
-      this.selector = selector;
-    }
 
     @Override
     public void read() throws Exception {

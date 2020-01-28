@@ -1,5 +1,7 @@
 package io.github.kezhenxu94.nottoy.nio;
 
+import lombok.extern.java.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,15 +14,14 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
 
 /**
  * Created by kezhenxu94 in 2018/8/28 21:58
  *
  * @author kezhenxu94 (kezhenxu94 at 163 dot com)
  */
+@Log
 public class EchoClient {
-  private static final Logger LOGGER = Logger.getLogger(EchoClient.class.getName());
   private static final String POISON_PILL = "BYE";
 
   private final Queue<String> messageQueue = new ConcurrentLinkedQueue<>();
@@ -93,7 +94,7 @@ public class EchoClient {
     LOGGER.info("===> " + line);
   }
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     new EchoClient().start();
   }
 }

@@ -1,5 +1,7 @@
 package io.github.kezhenxu94.nottoy.nio;
 
+import lombok.extern.java.Log;
+
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -7,15 +9,14 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 /**
  * Created by kezhenxu94 in 2018/8/28 21:53
  *
  * @author kezhenxu94 (kezhenxu94 at 163 dot com)
  */
+@Log
 public class EchoServer {
-  private static final Logger LOGGER = Logger.getLogger(EchoServer.class.getName());
   private static final String POISON_PILL = "BYE";
 
   public void start() throws Exception {
@@ -30,8 +31,8 @@ public class EchoServer {
         if (selector.select(1000L) == 0) {
           continue;
         }
-        for (final Iterator<SelectionKey> iterator = selector.selectedKeys().iterator(); iterator.hasNext(); iterator.remove()) {
-          final SelectionKey key = iterator.next();
+        for (final Iterator<SelectionKey> it = selector.selectedKeys().iterator(); it.hasNext(); it.remove()) {
+          final SelectionKey key = it.next();
           if (key.isAcceptable()) {
             final ServerSocketChannel server = (ServerSocketChannel) key.channel();
             final SocketChannel client = server.accept();

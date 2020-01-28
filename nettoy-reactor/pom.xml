@@ -12,6 +12,8 @@
 
     <artifactId>nettoy-reactor</artifactId>
 
+    <packaging>pom</packaging>
+
     <modules>
         <module>reactor-single-threaded</module>
         <module>reactor-multi-threaded</module>

@@ -1,18 +1,31 @@
 package io.github.kezhenxu94.nettoy;
 
-import io.github.kezhenxu94.nettoy.channel.Channel;
-import io.github.kezhenxu94.nettoy.channel.EventLoop;
-import io.github.kezhenxu94.nettoy.channel.ServerChannelFactory;
+import lombok.extern.java.Log;
+
+import java.util.concurrent.Future;
 
 /**
  * @author kezhenxu94
  */
+@Log
 public class EchoServer {
-  public static void main(String[] args) throws Exception {
-    final EventLoop eventLoop = new SingleThreadEventLoop();
-    final ServerChannelFactory channelFactory = new ServerChannelFactory();
-    final Channel serverChannel = channelFactory.newInstance();
+  static {
+    System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-5s] %5$s %n");
+  }
 
-    eventLoop.register(serverChannel);
+  public static void main(String[] args) throws Exception {
+    final int port = 8080;
+    final ServerBootstrapConfig config = ServerBootstrapConfig.builder()
+                                                              .childHandler(new EchoHandler())
+                                                              .build();
+    final Future<Throwable> bindFuture = new ServerBootstrap(config).bind(port);
+
+    final Throwable cause = bindFuture.get();
+
+    if (cause == null) {
+      LOGGER.info("started successfully");
+    } else {
+      LOGGER.severe("failed to bind to port: " + port);
+    }
   }
 }

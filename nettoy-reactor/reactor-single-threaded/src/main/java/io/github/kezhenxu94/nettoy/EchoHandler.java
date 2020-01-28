@@ -1,6 +1,7 @@
 package io.github.kezhenxu94.nettoy;
 
 import io.github.kezhenxu94.nettoy.reactor.ChannelHandler;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -8,13 +9,12 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * @author kezhenxu94
  */
+@Log
 public final class EchoHandler implements ChannelHandler {
-  static final Logger LOGGER = Logger.getLogger(EchoHandler.class.getName());
   static final String POISON_PILL = "BYE";
 
   final SocketChannel socketChannel;

@@ -1,5 +1,8 @@
 package io.github.kezhenxu94.nettoy.bio;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,15 +13,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 /**
  * Created by kezhenxu94 in 2018/8/28 21:53
  *
  * @author kezhenxu94 (kezhenxu94 at 163 dot com)
  */
+@Log
 public class EchoServer {
-  private static final Logger LOGGER = Logger.getLogger(EchoServer.class.getSimpleName());
   private static final String POISON_PILL = "BYE";
 
   private final Executor executor = Executors.newCachedThreadPool();
@@ -36,12 +38,9 @@ public class EchoServer {
     new EchoServer().start();
   }
 
+  @RequiredArgsConstructor
   private static class SocketHandler implements Runnable {
     private final Socket socket;
-
-    SocketHandler(Socket socket) {
-      this.socket = socket;
-    }
 
     @Override
     public void run() {

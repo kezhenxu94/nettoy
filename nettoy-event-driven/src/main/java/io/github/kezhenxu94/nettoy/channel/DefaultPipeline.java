@@ -2,6 +2,7 @@ package io.github.kezhenxu94.nettoy.channel;
 
 import lombok.Getter;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -41,5 +42,6 @@ public class DefaultPipeline implements Pipeline {
 
   @Override
   public void write(final Object msg) {
+    channel().write(((ByteBuffer) msg));
   }
 }

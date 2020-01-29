@@ -4,6 +4,7 @@ import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.CompletableFuture;
@@ -51,7 +52,22 @@ public class ServerNioChannel extends AbstractNioChannel {
   }
 
   @Override
+  public CompletableFuture<Throwable> write(final ByteBuffer buffer) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void flush() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public void beginRead() {
     eventLoop().execute(() -> selectionKey.interestOps(selectionKey.interestOps() | SelectionKey.OP_ACCEPT));
+  }
+
+  @Override
+  public void close() {
+
   }
 }

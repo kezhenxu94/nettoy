@@ -79,7 +79,7 @@ public class DefaultEventLoop implements EventLoop, Runnable {
       final SelectionKey key = it.next();
       final Channel channel = (Channel) key.attachment();
       if (!key.isValid()) {
-        channel.javaChannel().close();
+        channel.close();
         continue;
       }
 
@@ -94,7 +94,7 @@ public class DefaultEventLoop implements EventLoop, Runnable {
   }
 
   private void write(final Channel channel) {
-    LOGGER.info("writing to channel: " + channel);
+    channel.flush();
   }
 
   private void read(final Channel channel) throws IOException {

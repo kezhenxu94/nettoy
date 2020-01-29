@@ -26,6 +26,7 @@ public class EchoServer {
       LOGGER.info("started successfully");
     } else {
       LOGGER.severe("failed to bind to port: " + port);
+      cause.printStackTrace();
     }
   }
 }

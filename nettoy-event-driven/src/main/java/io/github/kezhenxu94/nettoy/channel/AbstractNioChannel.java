@@ -23,7 +23,7 @@ public abstract class AbstractNioChannel implements Channel {
   private final Pipeline pipeline;
 
   protected EventLoop eventLoop;
-  protected SelectionKey selectionKey;
+  protected volatile SelectionKey selectionKey;
 
   public AbstractNioChannel(final SelectableChannel javaChannel) throws IOException {
     this.javaChannel = javaChannel;
@@ -44,6 +44,29 @@ public abstract class AbstractNioChannel implements Channel {
     final CompletableFuture<Throwable> future = new CompletableFuture<>();
 
     eventLoop().execute(() -> register(future));
+
+    return future;
+  }
+
+  @Override
+  public CompletableFuture<Throwable> deregister() {
+    LOGGER.info("de-registering channel: " + this);
+
+    if (isNull(this.eventLoop)) {
+      throw new IllegalStateException("channel has not yet registered to an event loop");
+    }
+
+    final CompletableFuture<Throwable> future = new CompletableFuture<>();
+
+    try {
+      selectionKey.cancel();
+
+      future.complete(null);
+
+      this.eventLoop = null;
+    } catch (Exception e) {
+      future.complete(e);
+    }
 
     return future;
   }

@@ -21,7 +21,7 @@ public class ServerNioChannel extends AbstractNioChannel {
 
   @Override
   public CompletableFuture<Throwable> bind(final SocketAddress localAddress) {
-    final CompletableFuture<Throwable> future = new CompletableFuture<>();
+    final var future = new CompletableFuture<Throwable>();
 
     eventLoop().execute(() -> {
       try {
@@ -43,7 +43,7 @@ public class ServerNioChannel extends AbstractNioChannel {
     LOGGER.info("accepting from channel: " + this);
 
     try {
-      final Channel childChannel = new NioChannel(((ServerSocketChannel) javaChannel()).accept());
+      final var childChannel = new NioChannel(((ServerSocketChannel) javaChannel()).accept());
       pipeline().channelRead(childChannel);
       childChannel.register(eventLoop());
     } catch (IOException e) {
@@ -67,7 +67,7 @@ public class ServerNioChannel extends AbstractNioChannel {
   }
 
   @Override
-  public void close() {
-
+  public CompletableFuture<Throwable> close() {
+    return CompletableFuture.completedFuture(null);
   }
 }

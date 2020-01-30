@@ -21,14 +21,14 @@ public class EchoHandler implements ChannelHandler {
   public void channelRead(final Channel channel, final Object msg) {
     LOGGER.info("message read: " + msg);
 
-    final ByteBuffer buffer = (ByteBuffer) msg;
+    final var buffer = (ByteBuffer) msg;
     buffer.flip();
 
-    final String s = new String(buffer.array(), StandardCharsets.UTF_8);
+    final var s = new String(buffer.array(), StandardCharsets.UTF_8);
 
     channel.write(buffer).thenAccept(throwable -> {
       if (throwable != null || "BYE".equals(s.trim())) {
-        channel.close();
+        channel.close().thenAccept(Throwable::printStackTrace);
       }
     });
   }

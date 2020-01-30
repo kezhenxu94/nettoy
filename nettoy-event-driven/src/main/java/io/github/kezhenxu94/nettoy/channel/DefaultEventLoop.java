@@ -8,7 +8,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -66,7 +65,7 @@ public class DefaultEventLoop implements EventLoop, Runnable {
           continue;
         }
 
-        final Set<SelectionKey> selectionKeys = selector.selectedKeys();
+        final var selectionKeys = selector.selectedKeys();
         handleSelectedKeys(selectionKeys);
       } catch (IOException e) {
         e.printStackTrace();
@@ -76,10 +75,10 @@ public class DefaultEventLoop implements EventLoop, Runnable {
 
   private void handleSelectedKeys(final Set<SelectionKey> keys) throws IOException {
     for (final Iterator<SelectionKey> it = keys.iterator(); it.hasNext(); it.remove()) {
-      final SelectionKey key = it.next();
-      final Channel channel = (Channel) key.attachment();
+      final var key = it.next();
+      final var channel = (Channel) key.attachment();
       if (!key.isValid()) {
-        channel.close();
+        channel.close().thenAccept(Throwable::printStackTrace);
         continue;
       }
 
@@ -109,10 +108,10 @@ public class DefaultEventLoop implements EventLoop, Runnable {
 
     LOGGER.info("running " + taskQueue.size() + " pending tasks");
 
-    final List<Runnable> tasks = new ArrayList<>();
+    final var tasks = new ArrayList<Runnable>();
     taskQueue.drainTo(tasks);
 
-    for (final Runnable task : tasks) {
+    for (final var task : tasks) {
       if (nonNull(task)) {
         task.run();
       }

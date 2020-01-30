@@ -1,8 +1,6 @@
 package io.github.kezhenxu94.nettoy;
 
-import io.github.kezhenxu94.nettoy.channel.Channel;
 import io.github.kezhenxu94.nettoy.channel.DefaultEventLoop;
-import io.github.kezhenxu94.nettoy.channel.EventLoop;
 import io.github.kezhenxu94.nettoy.channel.ServerNioChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -21,8 +19,8 @@ public class ServerBootstrap {
   private final ServerBootstrapConfig config;
 
   public Future<Throwable> bind(final int port) throws Exception {
-    final EventLoop eventLoop = new DefaultEventLoop(Selector.open());
-    final Channel serverChannel = new ServerNioChannel();
+    final var eventLoop = new DefaultEventLoop(Selector.open());
+    final var serverChannel = new ServerNioChannel();
 
     serverChannel.pipeline().addHandler(new ServerAcceptor(config.childHandler()));
 

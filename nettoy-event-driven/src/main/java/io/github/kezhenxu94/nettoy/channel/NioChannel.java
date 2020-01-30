@@ -8,7 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,8 +31,8 @@ public class NioChannel extends AbstractNioChannel {
 
   @Override
   public void read() throws IOException {
-    final SocketChannel channel = (SocketChannel) javaChannel();
-    final ByteBuffer buffer = ByteBuffer.allocate(1024);
+    final var channel = (SocketChannel) javaChannel();
+    final var buffer = ByteBuffer.allocate(1024);
     channel.read(buffer);
 
     pipeline().channelRead(buffer);
@@ -43,7 +42,7 @@ public class NioChannel extends AbstractNioChannel {
   public CompletableFuture<Throwable> write(final ByteBuffer buffer) {
     LOGGER.info("writing message: " + buffer);
 
-    final CompletableFuture<Throwable> future = new CompletableFuture<>();
+    final var future = new CompletableFuture<Throwable>();
 
     pendingWrites.put(future, buffer);
 
@@ -52,10 +51,9 @@ public class NioChannel extends AbstractNioChannel {
 
   @Override
   public void flush() {
-    for (final Iterator<CompletableFuture<Throwable>> it = pendingWrites.keySet()
-                                                                        .iterator(); it.hasNext(); it.remove()) {
-      final CompletableFuture<Throwable> future = it.next();
-      final ByteBuffer buffer = pendingWrites.get(future);
+    for (final var it = pendingWrites.keySet().iterator(); it.hasNext(); it.remove()) {
+      final var future = it.next();
+      final var buffer = pendingWrites.get(future);
       try {
         LOGGER.info("writing to channel " + this + ": " + buffer);
 
@@ -75,12 +73,23 @@ public class NioChannel extends AbstractNioChannel {
   }
 
   @Override
-  public void close() {
-    try {
-      deregister();
-      javaChannel().close();
-    } catch (IOException e) {
-      throw new RuntimeException("failed to close channel", e);
-    }
+  public CompletableFuture<Throwable> close() {
+    return deregister().thenCompose(throwable -> {
+      final var future = new CompletableFuture<Throwable>();
+
+      if (throwable != null) {
+        future.complete(throwable);
+        return future;
+      }
+
+      try {
+        javaChannel().close();
+        future.complete(null);
+      } catch (IOException e) {
+        future.complete(e);
+      }
+
+      return future;
+    });
   }
 }

@@ -2,8 +2,6 @@ package io.github.kezhenxu94.nettoy;
 
 import lombok.extern.java.Log;
 
-import java.util.concurrent.Future;
-
 /**
  * @author kezhenxu94
  */
@@ -14,13 +12,10 @@ public class EchoServer {
   }
 
   public static void main(String[] args) throws Exception {
-    final int port = 8080;
-    final ServerBootstrapConfig config = ServerBootstrapConfig.builder()
-                                                              .childHandler(new EchoHandler())
-                                                              .build();
-    final Future<Throwable> bindFuture = new ServerBootstrap(config).bind(port);
-
-    final Throwable cause = bindFuture.get();
+    final var port = 8080;
+    final var config = ServerBootstrapConfig.builder().childHandler(new EchoHandler()).build();
+    final var bindFuture = new ServerBootstrap(config).bind(port);
+    final var cause = bindFuture.get();
 
     if (cause == null) {
       LOGGER.info("started successfully");

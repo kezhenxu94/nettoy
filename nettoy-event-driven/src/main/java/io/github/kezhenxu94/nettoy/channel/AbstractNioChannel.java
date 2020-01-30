@@ -41,7 +41,7 @@ public abstract class AbstractNioChannel implements Channel {
 
     this.eventLoop = requireNonNull(eventLoop, "eventLoop");
 
-    final CompletableFuture<Throwable> future = new CompletableFuture<>();
+    final var future = new CompletableFuture<Throwable>();
 
     eventLoop().execute(() -> register(future));
 
@@ -56,7 +56,7 @@ public abstract class AbstractNioChannel implements Channel {
       throw new IllegalStateException("channel has not yet registered to an event loop");
     }
 
-    final CompletableFuture<Throwable> future = new CompletableFuture<>();
+    final var future = new CompletableFuture<Throwable>();
 
     try {
       selectionKey.cancel();

@@ -30,5 +30,5 @@ public interface Channel {
 
   void beginRead();
 
-  void close();
+  CompletableFuture<Throwable> close();
 }

@@ -14,14 +14,14 @@ import java.util.concurrent.CompletableFuture;
  */
 @Log
 public class ServerNioChannel extends AbstractNioChannel {
-
   public ServerNioChannel() throws IOException {
     super(ServerSocketChannel.open());
+    this.unsafe = new Unsafe();
   }
 
   @Override
-  public CompletableFuture<Throwable> bind(final SocketAddress localAddress) {
-    final var future = new CompletableFuture<Throwable>();
+  public CompletableFuture<Void> bind(final SocketAddress localAddress) {
+    final var future = new CompletableFuture<Void>();
 
     eventLoop().execute(() -> {
       try {
@@ -31,7 +31,7 @@ public class ServerNioChannel extends AbstractNioChannel {
 
         future.complete(null);
       } catch (IOException e) {
-        future.complete(e);
+        future.completeExceptionally(e);
       }
     });
 
@@ -39,35 +39,37 @@ public class ServerNioChannel extends AbstractNioChannel {
   }
 
   @Override
-  public void read() {
-    LOGGER.info("accepting from channel: " + this);
-
-    try {
-      final var childChannel = new NioChannel(((ServerSocketChannel) javaChannel()).accept());
-      pipeline().channelRead(childChannel);
-      childChannel.register(eventLoop());
-    } catch (IOException e) {
-      throw new RuntimeException("failed to accept new connection", e);
-    }
-  }
-
-  @Override
-  public CompletableFuture<Throwable> write(final ByteBuffer buffer) {
+  public CompletableFuture<Void> write(final ByteBuffer buffer) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void flush() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void beginRead() {
-    eventLoop().execute(() -> selectionKey.interestOps(selectionKey.interestOps() | SelectionKey.OP_ACCEPT));
-  }
-
-  @Override
-  public CompletableFuture<Throwable> close() {
+  public CompletableFuture<Void> close() {
     return CompletableFuture.completedFuture(null);
+  }
+
+  class Unsafe implements Channel.Unsafe {
+    @Override
+    public void read() {
+      LOGGER.info("accepting from channel: " + this);
+
+      try {
+        final var childChannel = new NioChannel(((ServerSocketChannel) javaChannel()).accept());
+        pipeline().channelRead(childChannel);
+        childChannel.register(eventLoop());
+      } catch (IOException e) {
+        throw new RuntimeException("failed to accept new connection", e);
+      }
+    }
+
+    @Override
+    public void flush() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void beginRead() {
+      eventLoop().execute(() -> selectionKey.interestOps(selectionKey.interestOps() | SelectionKey.OP_ACCEPT));
+    }
   }
 }

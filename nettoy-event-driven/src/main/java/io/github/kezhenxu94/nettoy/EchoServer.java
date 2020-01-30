@@ -15,13 +15,14 @@ public class EchoServer {
     final var port = 8080;
     final var config = ServerBootstrapConfig.builder().childHandler(new EchoHandler()).build();
     final var bindFuture = new ServerBootstrap(config).bind(port);
-    final var cause = bindFuture.get();
 
-    if (cause == null) {
-      LOGGER.info("started successfully");
-    } else {
-      LOGGER.severe("failed to bind to port: " + port);
-      cause.printStackTrace();
-    }
+    bindFuture.thenRun(() -> LOGGER.info("started successfully"))
+              .exceptionally(throwable -> handleException(port, throwable));
+  }
+
+  private static Void handleException(final int port, final Throwable throwable) {
+    LOGGER.severe("failed to bind to port: " + port);
+    throwable.printStackTrace();
+    return null;
   }
 }

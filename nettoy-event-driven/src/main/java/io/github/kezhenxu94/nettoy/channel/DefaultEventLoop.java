@@ -78,7 +78,10 @@ public class DefaultEventLoop implements EventLoop, Runnable {
       final var key = it.next();
       final var channel = (Channel) key.attachment();
       if (!key.isValid()) {
-        channel.close().thenAccept(Throwable::printStackTrace);
+        channel.close().exceptionally(t -> {
+          t.printStackTrace();
+          return null;
+        });
         continue;
       }
 
@@ -93,12 +96,12 @@ public class DefaultEventLoop implements EventLoop, Runnable {
   }
 
   private void write(final Channel channel) {
-    channel.flush();
+    channel.unsafe().flush();
   }
 
   private void read(final Channel channel) throws IOException {
     LOGGER.info("reading from channel: " + channel);
-    channel.read();
+    channel.unsafe().read();
   }
 
   private void runPendingTasks() {

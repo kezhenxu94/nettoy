@@ -10,25 +10,29 @@ import java.util.concurrent.CompletableFuture;
  * @author kezhenxu94
  */
 public interface Channel {
+  interface Unsafe {
+    void flush();
+
+    void beginRead();
+
+    void read() throws IOException;
+  }
+
   SelectableChannel javaChannel();
-
-  CompletableFuture<Throwable> register(final EventLoop eventLoop);
-
-  CompletableFuture<Throwable> deregister();
 
   Pipeline pipeline();
 
-  CompletableFuture<Throwable> bind(final SocketAddress localAddress);
-
   EventLoop eventLoop();
 
-  void read() throws IOException;
+  CompletableFuture<Void> register(final EventLoop eventLoop);
 
-  CompletableFuture<Throwable> write(final ByteBuffer buffer);
+  CompletableFuture<Void> deregister();
 
-  void flush();
+  CompletableFuture<Void> bind(final SocketAddress localAddress);
 
-  void beginRead();
+  CompletableFuture<Void> write(final ByteBuffer buffer);
 
-  CompletableFuture<Throwable> close();
+  CompletableFuture<Void> close();
+
+  Unsafe unsafe();
 }

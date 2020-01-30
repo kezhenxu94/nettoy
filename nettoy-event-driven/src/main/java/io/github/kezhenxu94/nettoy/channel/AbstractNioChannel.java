@@ -21,18 +21,20 @@ public abstract class AbstractNioChannel implements Channel {
   private final SelectableChannel javaChannel;
   @Getter
   private final Pipeline pipeline;
+  @Getter
+  protected Unsafe unsafe;
 
   protected EventLoop eventLoop;
   protected volatile SelectionKey selectionKey;
 
   public AbstractNioChannel(final SelectableChannel javaChannel) throws IOException {
-    this.javaChannel = javaChannel;
+    this.javaChannel = requireNonNull(javaChannel, "javaChannel");
     this.javaChannel.configureBlocking(false);
     this.pipeline = new DefaultPipeline(this);
   }
 
   @Override
-  public CompletableFuture<Throwable> register(final EventLoop eventLoop) {
+  public CompletableFuture<Void> register(final EventLoop eventLoop) {
     LOGGER.info("registering channel: " + this);
 
     if (nonNull(this.eventLoop)) {
@@ -41,7 +43,7 @@ public abstract class AbstractNioChannel implements Channel {
 
     this.eventLoop = requireNonNull(eventLoop, "eventLoop");
 
-    final var future = new CompletableFuture<Throwable>();
+    final var future = new CompletableFuture<Void>();
 
     eventLoop().execute(() -> register(future));
 
@@ -49,14 +51,14 @@ public abstract class AbstractNioChannel implements Channel {
   }
 
   @Override
-  public CompletableFuture<Throwable> deregister() {
+  public CompletableFuture<Void> deregister() {
     LOGGER.info("de-registering channel: " + this);
 
     if (isNull(this.eventLoop)) {
       throw new IllegalStateException("channel has not yet registered to an event loop");
     }
 
-    final var future = new CompletableFuture<Throwable>();
+    final var future = new CompletableFuture<Void>();
 
     try {
       selectionKey.cancel();
@@ -65,13 +67,13 @@ public abstract class AbstractNioChannel implements Channel {
 
       this.eventLoop = null;
     } catch (Exception e) {
-      future.complete(e);
+      future.completeExceptionally(e);
     }
 
     return future;
   }
 
-  private void register(final CompletableFuture<Throwable> future) {
+  private void register(final CompletableFuture<Void> future) {
     LOGGER.info("do register channel");
 
     try {
@@ -81,9 +83,9 @@ public abstract class AbstractNioChannel implements Channel {
 
       pipeline().channelRegistered();
 
-      beginRead();
+      unsafe.beginRead();
     } catch (Throwable t) {
-      future.complete(t);
+      future.completeExceptionally(t);
     }
   }
 

@@ -11,6 +11,4 @@ public interface Pipeline {
   void channelRegistered();
 
   void channelRead(final Object msg);
-
-  void write(final Object msg);
 }

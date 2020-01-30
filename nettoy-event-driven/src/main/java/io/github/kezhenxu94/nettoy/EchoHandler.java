@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
  */
 @Log
 public class EchoHandler implements ChannelHandler {
+  private static final String POISON_PILL = "BYE";
+
   @Override
   public void channelRegistered(final Channel channel) {
     LOGGER.info("channel registered: " + channel);
@@ -26,10 +28,16 @@ public class EchoHandler implements ChannelHandler {
 
     final var s = new String(buffer.array(), StandardCharsets.UTF_8);
 
-    channel.write(buffer).thenAccept(throwable -> {
-      if (throwable != null || "BYE".equals(s.trim())) {
-        channel.close().thenAccept(Throwable::printStackTrace);
+    channel.write(buffer).thenRun(() -> {
+      if (POISON_PILL.equals(s.trim())) {
+        channel.close().exceptionally(t -> {
+          t.printStackTrace();
+          return null;
+        });
       }
+    }).exceptionally(throwable -> {
+      throwable.printStackTrace();
+      return null;
     });
   }
 }

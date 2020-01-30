@@ -8,7 +8,6 @@ import lombok.extern.java.Log;
 import java.net.InetSocketAddress;
 import java.nio.channels.Selector;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 /**
  * @author kezhenxu94
@@ -18,19 +17,15 @@ import java.util.concurrent.Future;
 public class ServerBootstrap {
   private final ServerBootstrapConfig config;
 
-  public Future<Throwable> bind(final int port) throws Exception {
+  public CompletableFuture<Void> bind(final int port) throws Exception {
     final var eventLoop = new DefaultEventLoop(Selector.open());
     final var serverChannel = new ServerNioChannel();
 
     serverChannel.pipeline().addHandler(new ServerAcceptor(config.childHandler()));
 
-    return serverChannel.register(eventLoop).thenCompose(throwable -> {
-      if (throwable != null) { // failed to register
-        return CompletableFuture.completedFuture(throwable);
-      }
-
-      return serverChannel.bind(new InetSocketAddress(port));
-    });
+    return serverChannel.register(eventLoop)
+                        .thenCompose(ignored -> serverChannel.bind(new InetSocketAddress(port)))
+                        .exceptionallyCompose(CompletableFuture::failedFuture);
   }
 
 }

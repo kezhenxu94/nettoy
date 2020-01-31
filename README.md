@@ -14,7 +14,7 @@ A toy [Netty Project](https://github.com/netty/netty) for study case
 
 - [Build Your Own Netty - Reactor Pattern](blog/3.%20Build%20Your%20Own%20Netty%20-%20Reactor%20Pattern.md)
 
-- Build Your Own Netty - Event-Driven
+- [Build Your Own Netty - Event Driven](blog/4.%20Build%20Your%20Own%20Netty%20-%20Event%20Driven)
 
 - Netty - An Overview
 

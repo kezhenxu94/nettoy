@@ -45,7 +45,7 @@ public class NioChannel extends AbstractNioChannel {
   public CompletableFuture<Void> close() {
     final var future = new CompletableFuture<Void>();
 
-    return deregister().thenCompose(ignored -> {
+    return deregister().thenComposeAsync(ignored -> {
       try {
         javaChannel().close();
         future.complete(null);

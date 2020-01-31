@@ -24,7 +24,7 @@ public class ServerBootstrap {
     serverChannel.pipeline().addHandler(new ServerAcceptor(config.childHandler()));
 
     return serverChannel.register(eventLoop)
-                        .thenCompose(ignored -> serverChannel.bind(new InetSocketAddress(port)))
+                        .thenComposeAsync(ignored -> serverChannel.bind(new InetSocketAddress(port)))
                         .exceptionallyCompose(CompletableFuture::failedFuture);
   }
 

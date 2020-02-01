@@ -1,6 +1,6 @@
 # Nettoy
 
-A toy [Netty Project](https://github.com/netty/netty) for study case
+A bottom-up approach to learn the [Netty](http://github.com/netty/netty) project, by creating your own **toy Netty**.
 
 ![Feynman](blog/feynman.png)
 

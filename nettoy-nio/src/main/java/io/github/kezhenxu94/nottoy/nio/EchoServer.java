@@ -20,8 +20,8 @@ public class EchoServer {
   private static final String POISON_PILL = "BYE";
 
   public void start() throws Exception {
-    try (final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
-      final Selector selector = Selector.open();
+    try (final var serverSocketChannel = ServerSocketChannel.open()) {
+      final var selector = Selector.open();
 
       serverSocketChannel.bind(new InetSocketAddress(8080));
       serverSocketChannel.configureBlocking(false);
@@ -31,11 +31,11 @@ public class EchoServer {
         if (selector.select(1000L) == 0) {
           continue;
         }
-        for (final Iterator<SelectionKey> it = selector.selectedKeys().iterator(); it.hasNext(); it.remove()) {
-          final SelectionKey key = it.next();
+        for (final var it = selector.selectedKeys().iterator(); it.hasNext(); it.remove()) {
+          final var key = it.next();
           if (key.isAcceptable()) {
-            final ServerSocketChannel server = (ServerSocketChannel) key.channel();
-            final SocketChannel client = server.accept();
+            final var server = (ServerSocketChannel) key.channel();
+            final var client = server.accept();
             client.configureBlocking(false);
             client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, ByteBuffer.allocate(1024));
             LOGGER.info("client connected: " + client);
@@ -52,8 +52,8 @@ public class EchoServer {
   }
 
   private void writeData(final SelectionKey key) throws Exception {
-    final SocketChannel channel = (SocketChannel) key.channel();
-    final ByteBuffer buffer = (ByteBuffer) key.attachment();
+    final var channel = (SocketChannel) key.channel();
+    final var buffer = (ByteBuffer) key.attachment();
 
     try {
       buffer.flip();
@@ -61,7 +61,7 @@ public class EchoServer {
         return;
       }
 
-      final String s = new String(buffer.array(), buffer.arrayOffset(), buffer.remaining()).trim();
+      final var s = new String(buffer.array(), buffer.arrayOffset(), buffer.remaining()).trim();
       LOGGER.info("===> " + s);
 
       channel.write(buffer);
@@ -76,13 +76,13 @@ public class EchoServer {
   }
 
   private void readData(final SelectionKey key) throws Exception {
-    final ByteBuffer buffer = ((ByteBuffer) key.attachment());
-    final SocketChannel channel = (SocketChannel) key.channel();
-    final int read = channel.read(buffer);
+    final var buffer = ((ByteBuffer) key.attachment());
+    final var channel = (SocketChannel) key.channel();
+    final var read = channel.read(buffer);
     if (read <= 0) {
       return;
     }
-    final String s = new String(buffer.array(), 0, read).trim();
+    final var s = new String(buffer.array(), 0, read).trim();
     LOGGER.info("<=== " + s);
   }
 

@@ -45,7 +45,7 @@ public final class Reactor implements Runnable {
           continue;
         }
 
-        final Set<SelectionKey> selectionKeys = selector.selectedKeys();
+        final var selectionKeys = selector.selectedKeys();
         selectionKeys.forEach(this::dispatch);
         selectionKeys.clear();
       } catch (IOException e) {
@@ -55,7 +55,7 @@ public final class Reactor implements Runnable {
   }
 
   private void dispatch(final SelectionKey selectionKey) {
-    final ChannelHandler handler = (ChannelHandler) selectionKey.attachment();
+    final var handler = (ChannelHandler) selectionKey.attachment();
     try {
       if (selectionKey.isReadable() || selectionKey.isAcceptable()) {
         handler.read();

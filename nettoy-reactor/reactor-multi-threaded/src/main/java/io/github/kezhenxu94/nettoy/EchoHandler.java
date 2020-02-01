@@ -32,7 +32,7 @@ public final class EchoHandler implements ChannelHandler {
     this.selector = selector;
     this.msgQ = new LinkedBlockingQueue<>();
     this.executor = Executors.newCachedThreadPool(r -> {
-      final Thread thread = new Thread(r);
+      final var thread = new Thread(r);
       thread.setName("Worker");
       return thread;
     });
@@ -45,9 +45,9 @@ public final class EchoHandler implements ChannelHandler {
 
   @Override
   public void read() throws Exception {
-    final ByteBuffer buffer = ByteBuffer.allocate(1024);
+    final var buffer = ByteBuffer.allocate(1024);
     socketChannel.read(buffer);
-    final String msg = msgCodec.decode(buffer);
+    final var msg = msgCodec.decode(buffer);
     LOGGER.info("[" + Thread.currentThread() + "] <=== " + msg);
 
     executor.execute(new Processor(msg));
@@ -59,8 +59,8 @@ public final class EchoHandler implements ChannelHandler {
       socketChannel.register(selector, SelectionKey.OP_READ).attach(this);
       return;
     }
-    final String msg = msgQ.take();
-    final ByteBuffer buffer = msgCodec.encode(msg);
+    final var msg = msgQ.take();
+    final var buffer = msgCodec.encode(msg);
     socketChannel.write(buffer);
     LOGGER.info("[" + Thread.currentThread() + "] ===> " + msg);
 

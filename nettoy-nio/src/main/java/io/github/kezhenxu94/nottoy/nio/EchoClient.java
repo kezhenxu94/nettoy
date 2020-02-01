@@ -29,9 +29,9 @@ public class EchoClient {
   private volatile boolean running = true;
 
   public void start() {
-    final Thread thread = new Thread(() -> {
-      try (final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+    final var thread = new Thread(() -> {
+      try (final var reader = new BufferedReader(new InputStreamReader(System.in))) {
+        for (var line = reader.readLine(); line != null; line = reader.readLine()) {
           messageQueue.offer(line);
         }
       } catch (IOException e) {
@@ -41,8 +41,8 @@ public class EchoClient {
     thread.setDaemon(true);
     thread.start();
 
-    try (final SocketChannel socketChannel = SocketChannel.open();
-         final Selector selector = Selector.open()) {
+    try (final var socketChannel = SocketChannel.open();
+         final var selector = Selector.open()) {
       socketChannel.connect(new InetSocketAddress(InetAddress.getLocalHost(), 8080));
       socketChannel.configureBlocking(false);
       socketChannel.register(selector, SelectionKey.OP_WRITE | SelectionKey.OP_READ);
@@ -51,9 +51,8 @@ public class EchoClient {
         if (selector.select(1000L) <= 0) {
           continue;
         }
-        for (Iterator<SelectionKey> iterator = selector.selectedKeys()
-                                                       .iterator(); iterator.hasNext(); iterator.remove()) {
-          final SelectionKey key = iterator.next();
+        for (var iterator = selector.selectedKeys().iterator(); iterator.hasNext(); iterator.remove()) {
+          final var key = iterator.next();
           if (key.isReadable()) {
             readData(key);
           }
@@ -68,13 +67,13 @@ public class EchoClient {
   }
 
   private void readData(SelectionKey key) throws Exception {
-    final SocketChannel channel = (SocketChannel) key.channel();
-    final ByteBuffer buffer = ByteBuffer.allocate(1024);
-    final int read = channel.read(buffer);
+    final var channel = (SocketChannel) key.channel();
+    final var buffer = ByteBuffer.allocate(1024);
+    final var read = channel.read(buffer);
     if (read <= 0) {
       return;
     }
-    final String s = new String(buffer.array(), 0, read);
+    final var s = new String(buffer.array(), 0, read);
     LOGGER.info("<=== " + s);
     if (POISON_PILL.equals(s.trim())) {
       running = false;
@@ -82,12 +81,12 @@ public class EchoClient {
   }
 
   private void writeData(SelectionKey key) throws Exception {
-    final SocketChannel channel = (SocketChannel) key.channel();
-    final String line = messageQueue.poll();
+    final var channel = (SocketChannel) key.channel();
+    final var line = messageQueue.poll();
     if (line == null) {
       return;
     }
-    final ByteBuffer buffer = ByteBuffer.allocate(1024);
+    final var buffer = ByteBuffer.allocate(1024);
     buffer.put(line.getBytes());
     buffer.flip();
     channel.write(buffer);

@@ -88,7 +88,7 @@ public class NioChannel extends AbstractNioChannel {
 
     @Override
     public void beginRead() {
-      final int interestOps = SelectionKey.OP_READ | SelectionKey.OP_WRITE;
+      final var interestOps = SelectionKey.OP_READ | SelectionKey.OP_WRITE;
       eventLoop().execute(() -> selectionKey.interestOps(selectionKey.interestOps() | interestOps));
     }
   }

@@ -74,7 +74,7 @@ public class DefaultEventLoop implements EventLoop, Runnable {
   }
 
   private void handleSelectedKeys(final Set<SelectionKey> keys) throws IOException {
-    for (final Iterator<SelectionKey> it = keys.iterator(); it.hasNext(); it.remove()) {
+    for (final var it = keys.iterator(); it.hasNext(); it.remove()) {
       final var key = it.next();
       final var channel = (Channel) key.attachment();
       if (!key.isValid()) {

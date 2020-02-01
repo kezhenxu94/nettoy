@@ -36,9 +36,9 @@ public final class EchoHandler implements ChannelHandler {
 
   @Override
   public void read() throws Exception {
-    final ByteBuffer buffer = ByteBuffer.allocate(1024);
+    final var buffer = ByteBuffer.allocate(1024);
     socketChannel.read(buffer);
-    final String msg = msgCodec.decode(buffer);
+    final var msg = msgCodec.decode(buffer);
 
     LOGGER.info("<=== " + msg);
     msgQ.addLast(msg);
@@ -49,7 +49,7 @@ public final class EchoHandler implements ChannelHandler {
 
   @Override
   public void write() throws Exception {
-    final String msg = msgQ.removeFirst();
+    final var msg = msgQ.removeFirst();
     socketChannel.write(msgCodec.encode(msg));
 
     LOGGER.info("===> " + msg);

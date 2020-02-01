@@ -55,7 +55,7 @@ public final class Reactor implements Runnable {
   }
 
   private void dispatch(final SelectionKey selectionKey) {
-    final ChannelHandler handler = (ChannelHandler) selectionKey.attachment();
+    final var handler = (ChannelHandler) selectionKey.attachment();
     try {
       if (selectionKey.isReadable() || selectionKey.isAcceptable()) {
         handler.read();

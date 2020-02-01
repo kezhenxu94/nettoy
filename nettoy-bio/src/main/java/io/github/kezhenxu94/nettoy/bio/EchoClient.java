@@ -24,24 +24,24 @@ public class EchoClient {
   private final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
   public void start() throws IOException, InterruptedException {
-    final Socket socket = new Socket();
+    final var socket = new Socket();
     socket.connect(new InetSocketAddress(8080));
 
     final Thread readerThread = new Thread(new ReaderTask());
     readerThread.setDaemon(true);
     readerThread.start();
 
-    final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-    final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    final var writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+    final var reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-    for (String msg = queue.take(); !Thread.interrupted(); msg = queue.take()) {
+    for (var msg = queue.take(); !Thread.interrupted(); msg = queue.take()) {
       LOGGER.info("===> " + msg);
 
       writer.write(msg);
       writer.newLine();
       writer.flush();
 
-      final String response = reader.readLine();
+      final var response = reader.readLine();
       LOGGER.info("<=== " + response);
 
       if (response.equals(POISON_PILL)) {
@@ -53,8 +53,8 @@ public class EchoClient {
   private class ReaderTask implements Runnable {
     @Override
     public void run() {
-      try (final BufferedReader userReader = new BufferedReader(new InputStreamReader(System.in))) {
-        for (String line = userReader.readLine(); line != null; line = userReader.readLine()) {
+      try (final var userReader = new BufferedReader(new InputStreamReader(System.in))) {
+        for (var line = userReader.readLine(); line != null; line = userReader.readLine()) {
           queue.put(line);
         }
       } catch (IOException | InterruptedException e) {

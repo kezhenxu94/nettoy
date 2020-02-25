@@ -1,6 +1,6 @@
 # Nettoy
 
-A bottom-up approach to learn the [Netty](http://github.com/netty/netty) project, by creating your own **toy Netty**.
+A bottom-up approach to learn the [Netty](http://github.com/netty/netty) project, by creating your own **Net**ty **toy**.
 
 ![Feynman](blog/feynman.png)
 
